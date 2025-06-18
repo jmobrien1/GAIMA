@@ -107,27 +107,33 @@ user_problem_statement: "Build GAIMA (Getting Around Illinois Mobile Application
 backend:
   - task: "Map Data Layer APIs"
     implemented: true
-    working: "unknown"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented 7 API endpoints for map layers (traffic, construction, closures, incidents, weather, winter, restrictions) with realistic mock data and real-time updates"
+      - working: true
+        agent: "testing"
+        comment: "All 7 layer endpoints (/api/layers/traffic, /api/layers/construction, /api/layers/closures, /api/layers/incidents, /api/layers/weather, /api/layers/winter, /api/layers/restrictions) are working correctly. Each endpoint returns proper JSON with data array, last_updated timestamp, and count. All data points have the required fields (id, type, location, title, details, severity, timestamp) and coordinates are within Illinois bounds. The incidents layer successfully updates in real-time with new data every 30 seconds as verified by comparing data before and after the update interval."
         
   - task: "Look-Ahead Alert System API"
     implemented: true
-    working: "unknown" 
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented POST /api/alerts/lookahead endpoint that takes user location/heading and returns hazard alerts within 2-mile radius"
+      - working: true
+        agent: "testing"
+        comment: "The look-ahead alert system API (/api/alerts/lookahead) is working correctly. It properly accepts POST requests with latitude, longitude, and heading parameters. Testing with various Illinois locations (Chicago, Springfield, Peoria) and different headings (0, 90, 180, 270 degrees) successfully triggered alerts when hazards were nearby. The API returns proper JSON responses with alert boolean and message string. Random coordinate testing within Illinois bounds also worked as expected."
 
 frontend:
   - task: "Interactive Map with Leaflet"
