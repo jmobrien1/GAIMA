@@ -138,39 +138,48 @@ backend:
 frontend:
   - task: "Interactive Map with Leaflet"
     implemented: true
-    working: "unknown"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented OpenStreetMap with Leaflet, custom markers, popups, layer toggles, centered on Illinois"
+      - working: true
+        agent: "testing"
+        comment: "Map loads correctly and is centered on Illinois. OpenStreetMap tiles display properly. Layer toggle button in top-right works correctly. Successfully tested toggling individual layers on/off. Verified exclusivity rule: when Winter layer is toggled on, Traffic layer is automatically turned off. Map markers appear correctly when layers are active (55 markers found). Clicking on markers shows popup with details including title, details, severity, and timestamp. Status information at bottom-left correctly shows active layers and point counts."
         
   - task: "Onboarding Flow (Terms + Safety)"
     implemented: true
-    working: "unknown"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented Terms of Use modal (localStorage tracking) and Safety Warning modal (every launch) with proper scroll-to-accept functionality"
+      - working: true
+        agent: "testing"
+        comment: "Terms of Use modal appears correctly on first visit. Accept button becomes enabled after scrolling to the bottom of terms. After accepting terms, Safety Warning modal appears as expected. Safety warning can be dismissed with 'I Understand' button. On subsequent visits, only Safety Warning appears (terms acceptance persists in localStorage). The onboarding flow works correctly on both desktop and mobile resolutions."
         
   - task: "Audio Look-Ahead Alerts"
     implemented: true
-    working: "unknown"
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented geolocation tracking, 5-second alert checking, Web Speech API for TTS, settings toggle"
+      - working: true
+        agent: "testing"
+        comment: "Audio alerts toggle in settings modal works correctly. When enabled, status information shows '🔊 Audio Alerts ON' indicator. The settings modal can be opened and closed properly. Note: Actual audio functionality using Web Speech API and geolocation tracking could not be fully tested in the automated testing environment, but the UI components and toggle functionality work as expected."
 
 metadata:
   created_by: "main_agent"
