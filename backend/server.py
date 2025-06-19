@@ -675,6 +675,108 @@ async def search_place(request: PlaceSearchRequest):
         count=len(matching_places)
     )
 
+# Admin Authentication Endpoints
+@api_router.post("/admin/login", response_model=AdminLoginResponse)
+async def admin_login(login_request: AdminLoginRequest):
+    """Admin login endpoint"""
+    # Hardcoded credentials for demo (in real app, check against database)
+    if login_request.username != "idot_admin" or login_request.password != "password123":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password"
+        )
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": login_request.username}, expires_delta=access_token_expires
+    )
+    
+    return AdminLoginResponse(
+        access_token=access_token,
+        expires_in=ACCESS_TOKEN_EXPIRE_MINUTES * 60  # Convert to seconds
+    )
+
+# Admin Dashboard Endpoints (Protected)
+@api_router.get("/admin/dashboard", response_model=AdminDashboardStats)
+async def get_admin_dashboard(current_user: dict = Depends(get_current_admin_user)):
+    """Get admin dashboard statistics"""
+    total_data_points = sum(len(data_store.get(layer, [])) for layer in all_layer_types)
+    
+    return AdminDashboardStats(
+        total_users=len(MOCK_ADMIN_USERS) + random.randint(1500, 2500),  # Include public users
+        active_layers=len(all_layer_types),
+        total_data_points=total_data_points,
+        alerts_sent_today=random.randint(45, 120),
+        system_uptime="15 days, 8 hours"
+    )
+
+@api_router.get("/admin/users", response_model=List[AdminUser])
+async def get_admin_users(current_user: dict = Depends(get_current_admin_user)):
+    """Get list of admin users"""
+    return MOCK_ADMIN_USERS
+
+@api_router.get("/admin/content")
+async def get_admin_content(current_user: dict = Depends(get_current_admin_user)):
+    """Get content management data"""
+    return {
+        "faqs": [
+            {"id": 1, "question": "How often is traffic data updated?", "answer": "Every 30 seconds for incidents, every 5 minutes for traffic conditions"},
+            {"id": 2, "question": "Can I save favorite locations?", "answer": "Yes, use the Profile tab to set home/work locations and save favorites"},
+            {"id": 3, "question": "How do audio alerts work?", "answer": "Enable audio alerts in settings, and you'll hear warnings about hazards within 2 miles"}
+        ],
+        "announcements": [
+            {"id": 1, "title": "System Maintenance", "content": "Scheduled maintenance on Sunday 2:00 AM - 4:00 AM", "priority": "medium"},
+            {"id": 2, "title": "New Features", "content": "Profile system and favorites now available", "priority": "low"}
+        ],
+        "total_content_items": 5
+    }
+
+@api_router.get("/admin/alerts")
+async def get_admin_alerts(current_user: dict = Depends(get_current_admin_user)):
+    """Get alert broadcast management data"""
+    return {
+        "recent_alerts": [
+            {"id": 1, "title": "Winter Weather Advisory", "sent_at": "2025-01-15T10:30:00Z", "recipients": 1250},
+            {"id": 2, "title": "Highway Construction Notice", "sent_at": "2025-01-14T14:15:00Z", "recipients": 890},
+            {"id": 3, "title": "System Update Notification", "sent_at": "2025-01-13T09:00:00Z", "recipients": 2100}
+        ],
+        "total_alerts_sent": 3,
+        "total_recipients_reached": 4240
+    }
+
+@api_router.get("/admin/audit")
+async def get_admin_audit_logs(current_user: dict = Depends(get_current_admin_user)):
+    """Get audit logs"""
+    return {
+        "logs": MOCK_AUDIT_LOGS,
+        "total_logs": len(MOCK_AUDIT_LOGS)
+    }
+
+@api_router.post("/admin/broadcast")
+async def broadcast_alert(
+    alert_data: dict,
+    current_user: dict = Depends(get_current_admin_user)
+):
+    """Broadcast an alert to all users"""
+    # In a real app, this would send push notifications or alerts
+    alert_id = str(uuid.uuid4())
+    
+    # Add to audit log
+    MOCK_AUDIT_LOGS.insert(0, {
+        "id": str(uuid.uuid4()),
+        "action": "Alert broadcast",
+        "user": current_user["username"],
+        "timestamp": datetime.utcnow(),
+        "details": f"Broadcasted alert: {alert_data.get('title', 'Untitled')}"
+    })
+    
+    return {
+        "success": True,
+        "alert_id": alert_id,
+        "message": "Alert broadcasted successfully",
+        "estimated_recipients": random.randint(800, 1500)
+    }
+
 # Original routes
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
