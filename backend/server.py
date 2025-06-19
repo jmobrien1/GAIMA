@@ -97,6 +97,84 @@ class PlaceSearchResponse(BaseModel):
     results: List[PlaceResult]
     count: int
 
+class AdminLoginRequest(BaseModel):
+    username: str
+    password: str
+
+class AdminLoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+
+class AdminUser(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    username: str
+    email: str
+    last_login: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    is_active: bool = True
+
+class AdminDashboardStats(BaseModel):
+    total_users: int
+    active_layers: int
+    total_data_points: int
+    alerts_sent_today: int
+    system_uptime: str
+
+# Authentication functions
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def get_current_admin_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    # In a real app, you'd fetch the user from database
+    if username != "idot_admin":
+        raise credentials_exception
+    
+    return {"username": username}
+
+# Mock admin data
+MOCK_ADMIN_USERS = [
+    AdminUser(username="john_doe", email="john@illinois.gov", last_login=datetime.utcnow() - timedelta(hours=2)),
+    AdminUser(username="jane_smith", email="jane@illinois.gov", last_login=datetime.utcnow() - timedelta(days=1)),
+    AdminUser(username="admin_user", email="admin@illinois.gov", last_login=datetime.utcnow() - timedelta(hours=5)),
+    AdminUser(username="traffic_manager", email="traffic@illinois.gov", last_login=datetime.utcnow() - timedelta(minutes=30)),
+    AdminUser(username="system_admin", email="system@illinois.gov", last_login=datetime.utcnow() - timedelta(days=3))
+]
+
+MOCK_AUDIT_LOGS = [
+    {"id": str(uuid.uuid4()), "action": "User login", "user": "admin_user", "timestamp": datetime.utcnow() - timedelta(hours=1), "details": "Successful admin login"},
+    {"id": str(uuid.uuid4()), "action": "Layer update", "user": "traffic_manager", "timestamp": datetime.utcnow() - timedelta(hours=2), "details": "Updated traffic layer data"},
+    {"id": str(uuid.uuid4()), "action": "Alert broadcast", "user": "admin_user", "timestamp": datetime.utcnow() - timedelta(hours=3), "details": "Sent emergency alert to all users"},
+    {"id": str(uuid.uuid4()), "action": "User creation", "user": "system_admin", "timestamp": datetime.utcnow() - timedelta(days=1), "details": "Created new user account"},
+    {"id": str(uuid.uuid4()), "action": "System maintenance", "user": "system_admin", "timestamp": datetime.utcnow() - timedelta(days=2), "details": "Performed system backup"}
+]
+
 # Illinois major cities and highways for realistic data generation
 ILLINOIS_LOCATIONS = [
     {"name": "Chicago", "lat": 41.8781, "lng": -87.6298},
