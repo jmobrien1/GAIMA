@@ -851,7 +851,8 @@ const TabNavigation = () => {
   );
 };
 
-function App() {
+// Main GAIMA Application Component
+const GaimaApp = () => {
   const { currentTab, currentRoute } = useStore();
   
   // State management
@@ -1050,12 +1051,21 @@ function App() {
                 </div>
               </div>
               
-              <button
-                onClick={() => setShowSettings(true)}
-                className="p-2 text-gray-600 hover:text-gray-900"
-              >
-                <CogIcon className="w-5 h-5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <a 
+                  href="/admin" 
+                  className="text-xs text-gray-500 hover:text-blue-600 transition-colors"
+                  title="Admin Dashboard"
+                >
+                  Admin
+                </a>
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="p-2 text-gray-600 hover:text-gray-900"
+                >
+                  <CogIcon className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1084,6 +1094,18 @@ function App() {
         </div>
       )}
     </div>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<GaimaApp />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
