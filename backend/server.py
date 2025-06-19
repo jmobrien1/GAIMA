@@ -346,6 +346,96 @@ async def get_restrictions_data():
         "count": len(data_store.get("restrictions", []))
     }
 
+@api_router.get("/layers/cameras")
+async def get_cameras_data():
+    return {
+        "data": data_store.get("cameras", []),
+        "last_updated": last_update.get("cameras", datetime.utcnow()),
+        "count": len(data_store.get("cameras", []))
+    }
+
+@api_router.get("/layers/rest-areas")
+async def get_rest_areas_data():
+    return {
+        "data": data_store.get("rest_areas", []),
+        "last_updated": last_update.get("rest_areas", datetime.utcnow()),
+        "count": len(data_store.get("rest_areas", []))
+    }
+
+@api_router.get("/layers/ev-stations")
+async def get_ev_stations_data():
+    return {
+        "data": data_store.get("ev_stations", []),
+        "last_updated": last_update.get("ev_stations", datetime.utcnow()),
+        "count": len(data_store.get("ev_stations", []))
+    }
+
+@api_router.get("/layers/toll-info")
+async def get_toll_info_data():
+    return {
+        "data": data_store.get("toll_info", []),
+        "last_updated": last_update.get("toll_info", datetime.utcnow()),
+        "count": len(data_store.get("toll_info", []))
+    }
+
+@api_router.get("/layers/special-events")
+async def get_special_events_data():
+    return {
+        "data": data_store.get("special_events", []),
+        "last_updated": last_update.get("special_events", datetime.utcnow()),
+        "count": len(data_store.get("special_events", []))
+    }
+
+@api_router.get("/layers/maintenance")
+async def get_maintenance_data():
+    return {
+        "data": data_store.get("maintenance", []),
+        "last_updated": last_update.get("maintenance", datetime.utcnow()),
+        "count": len(data_store.get("maintenance", []))
+    }
+
+@api_router.get("/layers/emergency-services")
+async def get_emergency_services_data():
+    return {
+        "data": data_store.get("emergency_services", []),
+        "last_updated": last_update.get("emergency_services", datetime.utcnow()),
+        "count": len(data_store.get("emergency_services", []))
+    }
+
+@api_router.get("/layers/travel-centers")
+async def get_travel_centers_data():
+    return {
+        "data": data_store.get("travel_centers", []),
+        "last_updated": last_update.get("travel_centers", datetime.utcnow()),
+        "count": len(data_store.get("travel_centers", []))
+    }
+
+@api_router.get("/layers/all")
+async def get_all_layers_info():
+    """Get summary information about all available layers"""
+    return {
+        "high_priority": {
+            layer: {
+                "count": len(data_store.get(layer, [])),
+                "last_updated": last_update.get(layer, datetime.utcnow())
+            } for layer in LAYER_PRIORITIES["high"]
+        },
+        "medium_priority": {
+            layer: {
+                "count": len(data_store.get(layer, [])),
+                "last_updated": last_update.get(layer, datetime.utcnow())
+            } for layer in LAYER_PRIORITIES["medium"]
+        },
+        "lower_priority": {
+            layer: {
+                "count": len(data_store.get(layer, [])),
+                "last_updated": last_update.get(layer, datetime.utcnow())
+            } for layer in LAYER_PRIORITIES["lower"]
+        },
+        "total_layers": len(all_layer_types),
+        "total_data_points": sum(len(data_store.get(layer, [])) for layer in all_layer_types)
+    }
+
 @api_router.post("/alerts/lookahead")
 async def get_lookahead_alerts(request: LookAheadRequest):
     """Check for hazards within 2 miles in direction of travel"""
