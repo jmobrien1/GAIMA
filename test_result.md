@@ -264,11 +264,14 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Onboarding Flow (Terms + Safety)"
+  stuck_tasks:
+    - "Onboarding Flow (Terms + Safety)"
     - "Tab Navigation System"
     - "Expanded Interactive Map (15 layers)"
     - "Search & Route Planning Screen"
     - "Profile & Favorites System"
-  stuck_tasks: []
+    - "Administrative Dashboard"
   test_all: false
   test_priority: "high_first"
 
@@ -277,3 +280,5 @@ agent_communication:
     message: "Completed GAIMA v2.0 implementation with major feature expansion. Backend now supports 15 map layers (organized by priority), search/route planning APIs, and comprehensive data. Frontend features tab navigation, expanded map with priority grouping, search screen with route planning, and profile system with favorites. Ready for comprehensive testing of new v2.0 features."
   - agent: "testing"
     message: "Completed comprehensive testing of all GAIMA v2.0 backend APIs. All 15 layer endpoints are working correctly with proper data structure and Illinois coordinates. The layer grouping API correctly categorizes layers into high/medium/lower priority. Search and route planning APIs work with Illinois coordinates and place names. Admin authentication flow works with correct credentials, and all protected admin endpoints require authentication and return appropriate data. All backend APIs are functioning as expected."
+  - agent: "testing"
+    message: "Critical issue found in the frontend application: The Terms of Use modal appears correctly, but the Accept & Continue button remains disabled even after scrolling to the bottom. This prevents users from proceeding past the initial onboarding screen. All frontend features (tab navigation, map layers, search, profile, admin dashboard) cannot be tested because it's impossible to get past the Terms modal. This is a critical blocker that needs to be fixed before any other frontend testing can proceed."
