@@ -107,15 +107,18 @@ user_problem_statement: "Build GAIMA v2.0 (Getting Around Illinois Mobile Applic
 backend:
   - task: "Expanded Map Data Layer APIs (15 layers)"
     implemented: true
-    working: "unknown"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Expanded from 7 to 15 map layers with priority grouping (High: 7, Medium: 4, Lower: 4). Added new layers: cameras, rest-areas, ev-stations, toll-info, special-events, maintenance, emergency-services, travel-centers with detailed mock data"
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested all 15 layer endpoints. All layers return proper JSON with data/count/last_updated fields. The /api/layers/all endpoint correctly groups layers into high (7), medium (4), and lower (4) priority categories. All data points contain proper Illinois coordinates and required fields."
         
   - task: "Search & Route Planning APIs"
     implemented: true
