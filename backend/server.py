@@ -499,7 +499,91 @@ async def get_lookahead_alerts(request: LookAheadRequest):
         
         return AlertResponse(alert=True, message=message)
     
-    return AlertResponse(alert=False)
+@api_router.post("/search/route")
+async def search_route(request: RouteRequest):
+    """Search for a route between two points"""
+    # Calculate distance using geodesic
+    start_point = (request.start_latitude, request.start_longitude)
+    end_point = (request.end_latitude, request.end_longitude)
+    distance = geodesic(start_point, end_point).miles
+    
+    # Estimate time (assuming average speed of 45 mph)
+    estimated_time = int((distance / 45) * 60)  # Convert to minutes
+    
+    # Generate a simple polyline (in real app, this would use routing service)
+    # For demo, create a simple straight line with some waypoints
+    num_points = max(5, int(distance / 10))  # More points for longer distances
+    polyline = []
+    
+    for i in range(num_points + 1):
+        ratio = i / num_points
+        lat = request.start_latitude + (request.end_latitude - request.start_latitude) * ratio
+        lng = request.start_longitude + (request.end_longitude - request.start_longitude) * ratio
+        
+        # Add small random variation to make it look more realistic
+        if i > 0 and i < num_points:
+            lat += random.uniform(-0.01, 0.01)
+            lng += random.uniform(-0.01, 0.01)
+        
+        polyline.append([lat, lng])
+    
+    # Generate mock turn-by-turn instructions
+    directions = [
+        "Head northwest on your starting road",
+        f"Continue for {distance/3:.1f} miles",
+        "Stay on the main route",
+        f"In {distance/2:.1f} miles, continue straight",
+        "Approaching destination on the right"
+    ]
+    
+    return RouteResponse(
+        distance_miles=round(distance, 1),
+        estimated_time_minutes=estimated_time,
+        polyline=polyline,
+        instructions=directions
+    )
+
+@api_router.post("/search/place")
+async def search_place(request: PlaceSearchRequest):
+    """Search for places by name or address"""
+    # Mock place search results based on Illinois locations
+    mock_places = [
+        {"name": "Chicago O'Hare International Airport", "category": "Airport", "lat": 41.9742, "lng": -87.9073},
+        {"name": "Millennium Park", "category": "Park", "lat": 41.8826, "lng": -87.6226},
+        {"name": "Navy Pier", "category": "Attraction", "lat": 41.8917, "lng": -87.6086},
+        {"name": "Springfield State Capitol", "category": "Government", "lat": 39.7990, "lng": -89.6544},
+        {"name": "University of Illinois", "category": "Education", "lat": 40.1020, "lng": -88.2272},
+        {"name": "Starved Rock State Park", "category": "Park", "lat": 41.3184, "lng": -88.9942},
+        {"name": "Route 66 Begin Sign", "category": "Landmark", "lat": 41.8781, "lng": -87.6298},
+        {"name": "Illinois State Fair", "category": "Event", "lat": 39.7817, "lng": -89.6501},
+        {"name": "Cahokia Mounds", "category": "Historic", "lat": 38.6581, "lng": -90.0629},
+        {"name": "Woodfield Mall", "category": "Shopping", "lat": 42.0409, "lng": -88.0359}
+    ]
+    
+    # Filter places based on search query
+    query_lower = request.query.lower()
+    matching_places = []
+    
+    for place in mock_places:
+        if (query_lower in place["name"].lower() or 
+            query_lower in place["category"].lower() or
+            len(query_lower) < 3):  # Show all for short queries
+            
+            matching_places.append(PlaceResult(
+                name=place["name"],
+                address=f"{place['name']}, Illinois, USA",
+                latitude=place["lat"],
+                longitude=place["lng"],
+                category=place["category"]
+            ))
+    
+    # Limit results
+    matching_places = matching_places[:request.limit]
+    
+    return PlaceSearchResponse(
+        results=matching_places,
+        count=len(matching_places)
+    )
 
 # Original routes
 @api_router.post("/status", response_model=StatusCheck)
