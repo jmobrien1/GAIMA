@@ -243,8 +243,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Expanded Map Data Layer APIs (15 layers)"
-    - "Search & Route Planning APIs"
     - "Tab Navigation System"
     - "Expanded Interactive Map (15 layers)"
     - "Search & Route Planning Screen"
