@@ -155,6 +155,106 @@ def generate_mock_data(data_type: str, count: int = 20) -> List[Dict[str, Any]]:
                 "title": f"Vehicle Restriction: {random.choice(restriction_types)}",
                 "details": f"Commercial vehicle restrictions in effect. Max weight: {random.randint(20, 80)}k lbs."
             })
+            
+        elif data_type == "cameras":
+            camera_names = ["I-55 @ Mile Marker 120", "I-94 Northbound", "US-45 & Route 83", "I-290 Eisenhower", "I-355 Veterans Memorial"]
+            point.update({
+                "title": f"Traffic Camera: {random.choice(camera_names)}",
+                "details": f"Live traffic camera. Last updated: {random.randint(1, 60)} seconds ago. View traffic conditions.",
+                "image_url": f"https://example.com/camera/{point['id']}.jpg",
+                "is_active": random.choice([True, False])
+            })
+            
+        elif data_type == "rest_areas":
+            amenities = [
+                ["Restrooms", "Vending", "Picnic Tables"],
+                ["Restrooms", "Gas Station", "Restaurant", "WiFi"],
+                ["Restrooms", "Truck Parking", "Showers"],
+                ["Restrooms", "Pet Area", "Playground", "Vending"]
+            ]
+            hours = ["24 Hours", "6 AM - 10 PM", "5 AM - 11 PM", "Open Daily"]
+            selected_amenities = random.choice(amenities)
+            point.update({
+                "title": f"Rest Area - Mile {random.randint(10, 300)}",
+                "details": f"Amenities: {', '.join(selected_amenities)}. Hours: {random.choice(hours)}",
+                "amenities": selected_amenities,
+                "hours": random.choice(hours),
+                "truck_parking": "Truck Parking" in selected_amenities
+            })
+            
+        elif data_type == "ev_stations":
+            networks = ["ChargePoint", "Electrify America", "Tesla Supercharger", "EVgo", "Blink"]
+            connector_types = ["CCS", "CHAdeMO", "Tesla", "J1772"]
+            stations = random.randint(2, 8)
+            available = random.randint(0, stations)
+            point.update({
+                "title": f"EV Charging - {random.choice(networks)}",
+                "details": f"{available}/{stations} stations available. Connectors: {', '.join(random.sample(connector_types, 2))}",
+                "network": random.choice(networks),
+                "total_stations": stations,
+                "available_stations": available,
+                "connector_types": random.sample(connector_types, random.randint(1, 3)),
+                "pricing": f"${random.uniform(0.15, 0.45):.2f}/kWh"
+            })
+            
+        elif data_type == "toll_info":
+            toll_roads = ["I-Pass Electronic", "Cash Payment", "License Plate Billing", "Pay-By-Plate"]
+            rates = [f"${random.uniform(0.50, 8.50):.2f}", f"${random.uniform(1.00, 12.00):.2f}"]
+            point.update({
+                "title": f"Toll Plaza - {random.choice(['I-90', 'I-94', 'I-355', 'Route 83'])}",
+                "details": f"Payment methods: {', '.join(random.sample(toll_roads, 2))}. Rate: {random.choice(rates)}",
+                "payment_methods": random.sample(toll_roads, random.randint(2, 4)),
+                "toll_rate": random.choice(rates)
+            })
+            
+        elif data_type == "special_events":
+            event_types = ["Concert", "Festival", "Sports Event", "Fair", "Marathon", "Parade"]
+            impact_levels = ["High Traffic Expected", "Road Closures Possible", "Parking Limited", "Detours in Effect"]
+            event_date = datetime.utcnow() + timedelta(days=random.randint(0, 30))
+            point.update({
+                "title": f"Special Event: {random.choice(event_types)}",
+                "details": f"Event Date: {event_date.strftime('%m/%d/%Y')}. {random.choice(impact_levels)}",
+                "event_type": random.choice(event_types),
+                "event_date": event_date.isoformat(),
+                "traffic_impact": random.choice(impact_levels)
+            })
+            
+        elif data_type == "maintenance":
+            maintenance_types = ["Pothole Repair", "Line Painting", "Sign Replacement", "Guardrail Repair", "Landscaping"]
+            scheduled_date = datetime.utcnow() + timedelta(days=random.randint(1, 14))
+            point.update({
+                "title": f"Scheduled Maintenance: {random.choice(maintenance_types)}",
+                "details": f"Scheduled: {scheduled_date.strftime('%m/%d/%Y')}. Duration: {random.randint(4, 12)} hours",
+                "maintenance_type": random.choice(maintenance_types),
+                "scheduled_date": scheduled_date.isoformat(),
+                "estimated_duration": f"{random.randint(4, 12)} hours"
+            })
+            
+        elif data_type == "emergency_services":
+            service_types = ["State Police", "Emergency Medical", "Fire Department", "DOT Emergency Response"]
+            point.update({
+                "title": f"Emergency Services: {random.choice(service_types)}",
+                "details": f"Emergency contact available 24/7. Response time: {random.randint(5, 20)} minutes",
+                "service_type": random.choice(service_types),
+                "contact_number": f"1-800-{random.randint(100, 999)}-{random.randint(1000, 9999)}",
+                "response_time": f"{random.randint(5, 20)} minutes"
+            })
+            
+        elif data_type == "travel_centers":
+            services = [
+                ["Visitor Information", "Maps", "WiFi"],
+                ["Tourist Brochures", "Local Attractions", "Event Calendar"],
+                ["Travel Planning", "Hotel Reservations", "Restaurant Recommendations"]
+            ]
+            center_hours = ["8 AM - 8 PM", "9 AM - 6 PM", "24 Hours", "10 AM - 4 PM"]
+            selected_services = random.choice(services)
+            point.update({
+                "title": f"Illinois Travel Information Center",
+                "details": f"Services: {', '.join(selected_services)}. Hours: {random.choice(center_hours)}",
+                "services": selected_services,
+                "hours": random.choice(center_hours),
+                "languages": ["English", "Spanish"] + random.sample(["French", "German", "Chinese"], 1)
+            })
         
         data.append(point)
     
