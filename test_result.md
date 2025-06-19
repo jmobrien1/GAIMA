@@ -150,51 +150,63 @@ backend:
 frontend:
   - task: "Tab Navigation System"
     implemented: true
-    working: "unknown"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented 3-tab navigation (Map, Search, Profile) with Zustand state management and clean bottom tab bar"
+      - working: false
+        agent: "testing"
+        comment: "Unable to test tab navigation as the application is stuck at the Terms of Use modal. The Accept & Continue button remains disabled even after scrolling to the bottom of the terms. JavaScript attempts to click the button also failed to progress past this screen."
         
   - task: "Expanded Interactive Map (15 layers)"
     implemented: true
-    working: "unknown"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Expanded map from 7 to 15 layers with priority grouping UI. Enhanced layer toggle with collapsible sections (High/Medium/Lower priority). Added detailed popup information for each layer type"
+      - working: false
+        agent: "testing"
+        comment: "Unable to test map functionality as the application is stuck at the Terms of Use modal. Cannot proceed to the main application to verify map layers and functionality."
         
   - task: "Search & Route Planning Screen"
     implemented: true
-    working: "unknown"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented comprehensive search screen with route planning (start/end locations) and place search functionality. Results integrate with map view including route polyline display"
+      - working: false
+        agent: "testing"
+        comment: "Unable to test search functionality as the application is stuck at the Terms of Use modal. Cannot proceed to the search screen to verify route planning and place search features."
         
   - task: "Profile & Favorites System"
     implemented: true
-    working: "unknown"
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented profile screen with home/work location settings, favorite locations management, and quick navigation actions. Uses localStorage for persistence"
+      - working: false
+        agent: "testing"
+        comment: "Unable to test profile functionality as the application is stuck at the Terms of Use modal. Cannot proceed to the profile screen to verify home/work location settings and favorites management."
 
   - task: "Onboarding Flow (Terms + Safety)"
     implemented: true
