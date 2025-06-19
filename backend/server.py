@@ -72,6 +72,13 @@ ILLINOIS_LOCATIONS = [
     {"name": "Cicero", "lat": 41.8456, "lng": -87.7539}
 ]
 
+# Layer Priority Organization
+LAYER_PRIORITIES = {
+    "high": ["traffic", "construction", "closures", "incidents", "weather", "winter", "restrictions"],
+    "medium": ["cameras", "rest_areas", "ev_stations", "toll_info"],
+    "lower": ["special_events", "maintenance", "emergency_services", "travel_centers"]
+}
+
 def generate_random_location_near_illinois():
     """Generate random coordinates near Illinois cities"""
     base_location = random.choice(ILLINOIS_LOCATIONS)
