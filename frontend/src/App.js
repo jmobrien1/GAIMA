@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 import axios from 'axios';
 import { create } from 'zustand';
+import AdminDashboard from './AdminDashboard';
 import { 
   MagnifyingGlassIcon, 
   MapIcon, 
