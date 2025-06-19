@@ -130,15 +130,26 @@ const LAYER_CONFIG = {
 const TermsModal = ({ isOpen, onAccept, onDecline }) => {
   const [canAccept, setCanAccept] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const scrollRef = useRef(null);
   
   const handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target;
-    const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 10;
+    const element = e.target;
+    const { scrollTop, scrollHeight, clientHeight } = element;
+    const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 5; // 5px tolerance
+    
     if (scrolledToBottom && !hasScrolled) {
       setHasScrolled(true);
       setCanAccept(true);
     }
   };
+
+  // Reset state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setCanAccept(false);
+      setHasScrolled(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -151,6 +162,7 @@ const TermsModal = ({ isOpen, onAccept, onDecline }) => {
         </div>
         
         <div 
+          ref={scrollRef}
           className="flex-1 p-6 overflow-y-auto"
           onScroll={handleScroll}
         >
@@ -186,15 +198,53 @@ const TermsModal = ({ isOpen, onAccept, onDecline }) => {
               while operating a motor vehicle.
             </p>
             
-            <h4 className="font-semibold mb-2">4. Privacy Policy</h4>
+            <h4 className="font-semibold mb-2">4. Accuracy of Information</h4>
+            <p className="mb-4">
+              While we strive to provide accurate and up-to-date information, GAIMA makes no warranties 
+              or representations as to the accuracy or completeness of the information provided. 
+              Road conditions can change rapidly.
+            </p>
+            
+            <h4 className="font-semibold mb-2">5. Privacy Policy</h4>
             <p className="mb-4">
               Your privacy is important to us. We collect minimal location data necessary to provide 
               traffic alerts and do not share personal information with third parties without consent.
             </p>
             
-            <p className="mt-6 text-gray-600 text-xs">
-              {!hasScrolled && "Please scroll to the bottom to accept the terms"}
+            <h4 className="font-semibold mb-2">6. Limitations</h4>
+            <p className="mb-4">
+              In no event shall GAIMA or its suppliers be liable for any damages (including, without limitation, 
+              damages for loss of data or profit, or due to business interruption) arising out of the use 
+              or inability to use GAIMA.
             </p>
+            
+            <h4 className="font-semibold mb-2">7. Emergency Situations</h4>
+            <p className="mb-4">
+              GAIMA is not intended for emergency situations. In case of emergency, contact local 
+              emergency services immediately at 911.
+            </p>
+            
+            <h4 className="font-semibold mb-2">8. Modifications</h4>
+            <p className="mb-4">
+              GAIMA may revise these terms of service at any time without notice. By using this application, 
+              you are agreeing to be bound by the then current version of these terms.
+            </p>
+            
+            {!hasScrolled && (
+              <div className="mt-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                <p className="text-blue-800 text-sm font-medium">
+                  📜 Please scroll to the bottom to accept the terms
+                </p>
+              </div>
+            )}
+            
+            {hasScrolled && (
+              <div className="mt-8 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
+                <p className="text-green-800 text-sm font-medium">
+                  ✅ Thank you for reading our terms. You may now accept and continue.
+                </p>
+              </div>
+            )}
           </div>
         </div>
         
@@ -208,13 +258,13 @@ const TermsModal = ({ isOpen, onAccept, onDecline }) => {
           <button
             onClick={onAccept}
             disabled={!canAccept}
-            className={`flex-1 px-4 py-2 rounded-lg transition-colors ${
+            className={`flex-1 px-4 py-2 rounded-lg transition-colors font-semibold ${
               canAccept 
-                ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            Accept & Continue
+            {canAccept ? 'Accept & Continue' : 'Read Terms to Continue'}
           </button>
         </div>
       </div>
