@@ -210,35 +210,41 @@ frontend:
 
   - task: "Onboarding Flow (Terms + Safety)"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "testing"
         comment: "Previously tested and working correctly with scroll-to-accept and localStorage persistence"
+      - working: false
+        agent: "testing"
+        comment: "The Terms of Use modal appears correctly, but the Accept & Continue button remains disabled even after scrolling to the bottom. This prevents users from proceeding past the initial onboarding screen. The Safety Warning modal cannot be tested as it's not possible to get past the Terms modal."
         
   - task: "Audio Look-Ahead Alerts"
     implemented: true
-    working: true
+    working: "unknown"
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: true
         agent: "testing"
         comment: "Previously tested and working correctly with geolocation and TTS integration"
+      - working: "unknown"
+        agent: "testing"
+        comment: "Unable to test audio alerts functionality as the application is stuck at the Terms of Use modal. Cannot proceed to the main application to verify this feature."
 
   - task: "Administrative Dashboard"
     implemented: true
-    working: true
+    working: false
     file: "/app/backend/server.py, /app/frontend/src/AdminDashboard.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "unknown"
         agent: "main"
@@ -246,6 +252,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Successfully tested all admin backend APIs. The authentication flow works correctly with JWT tokens for valid credentials (idot_admin/password123) and rejects invalid credentials. All protected admin endpoints (/api/admin/dashboard, /api/admin/users, /api/admin/content, /api/admin/alerts, /api/admin/audit) require valid authentication and return appropriate data. The alert broadcast endpoint (/api/admin/broadcast) successfully processes new alerts."
+      - working: false
+        agent: "testing"
+        comment: "Unable to test admin dashboard UI as direct navigation to /admin redirects to the Terms of Use modal. Cannot proceed to the admin login page to verify dashboard functionality."
 
 metadata:
   created_by: "main_agent"
