@@ -122,15 +122,18 @@ backend:
         
   - task: "Search & Route Planning APIs"
     implemented: true
-    working: "unknown" 
+    working: true 
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "unknown"
         agent: "main"
         comment: "Implemented POST /api/search/route for route planning with polyline generation and POST /api/search/place for location search with Illinois-based mock places"
+      - working: true
+        agent: "testing"
+        comment: "Successfully tested both search APIs. The route planning API (/api/search/route) correctly generates routes between Illinois locations with distance, time estimates, polyline coordinates, and turn-by-turn instructions. The place search API (/api/search/place) returns relevant Illinois locations based on search queries with proper coordinates and details."
 
   - task: "Look-Ahead Alert System API"
     implemented: true
