@@ -19,6 +19,15 @@ from passlib.context import CryptContext
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# JWT Configuration
+SECRET_KEY = "gaima-secret-key-for-admin-auth-2025"  # In production, use env variable
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours
+
+# Security
+security = HTTPBearer()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
