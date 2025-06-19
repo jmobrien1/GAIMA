@@ -272,8 +272,12 @@ async def update_incident_data():
         await asyncio.sleep(30)
 
 # Initialize data store
-for layer_type in ["traffic", "construction", "closures", "incidents", "weather", "winter", "restrictions"]:
-    data_store[layer_type] = generate_mock_data(layer_type, 15 if layer_type == "incidents" else 10)
+all_layer_types = ["traffic", "construction", "closures", "incidents", "weather", "winter", "restrictions", 
+                   "cameras", "rest_areas", "ev_stations", "toll_info", "special_events", "maintenance", 
+                   "emergency_services", "travel_centers"]
+
+for layer_type in all_layer_types:
+    data_store[layer_type] = generate_mock_data(layer_type, 15 if layer_type == "incidents" else 8)
     last_update[layer_type] = datetime.utcnow()
 
 # Start real-time update task
