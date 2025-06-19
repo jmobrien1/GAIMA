@@ -58,6 +58,33 @@ class AlertResponse(BaseModel):
     alert: bool
     message: str = ""
 
+class RouteRequest(BaseModel):
+    start_latitude: float
+    start_longitude: float
+    end_latitude: float
+    end_longitude: float
+    
+class PlaceSearchRequest(BaseModel):
+    query: str
+    limit: int = 10
+
+class RouteResponse(BaseModel):
+    distance_miles: float
+    estimated_time_minutes: int
+    polyline: List[List[float]]  # Array of [lat, lng] coordinates
+    instructions: List[str]
+    
+class PlaceResult(BaseModel):
+    name: str
+    address: str
+    latitude: float
+    longitude: float
+    category: str
+
+class PlaceSearchResponse(BaseModel):
+    results: List[PlaceResult]
+    count: int
+
 # Illinois major cities and highways for realistic data generation
 ILLINOIS_LOCATIONS = [
     {"name": "Chicago", "lat": 41.8781, "lng": -87.6298},
